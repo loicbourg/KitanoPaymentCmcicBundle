@@ -3,9 +3,9 @@
 namespace Kitano\PaymentCmcicBundle\PaymentSystem;
 
 use Kitano\PaymentBundle\PaymentSystem\CreditCardInterface;
-use Kitano\PaymentBundle\Model\Transaction;
-use Kitano\PaymentBundle\Model\AuthorizationTransaction;
-use Kitano\PaymentBundle\Model\CaptureTransaction;
+use Kitano\PaymentBundle\Entity\Transaction;
+use Kitano\PaymentBundle\Entity\AuthorizationTransaction;
+use Kitano\PaymentBundle\Entity\CaptureTransaction;
 use Kitano\PaymentBundle\KitanoPaymentEvents;
 use Kitano\PaymentBundle\Event\PaymentNotificationEvent;
 use Kitano\PaymentBundle\Event\PaymentCaptureEvent;
@@ -83,7 +83,7 @@ class CmcicPaymentSystem implements CreditCardInterface
             'societe' => $this->companyCode,
             'texte_libre' => '',
             'mail' => $this->getEmail(),
-            'date' => $this->formatDate($transaction->getDate()),
+            'date' => $this->formatDate($transaction->getCreatedAt()),
             'reference' => $transaction->getOrderId(),
             'montant' => $this->formatAmount($transaction->getAmount(), $transaction->getCurrency()),
             'requestUrl' => $this->getUrl('authorize'),
@@ -175,6 +175,11 @@ class CmcicPaymentSystem implements CreditCardInterface
         return new Response($acknowledgment);
     }
 
+    public function handleBackToShop(Request $request)
+    {
+
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -212,8 +217,8 @@ class CmcicPaymentSystem implements CreditCardInterface
         $data = array(
             'version'              => $this->getVersion(),
             'TPE'                  => $this->getTpe(),
-            'date'                 => $this->formatDate($transaction->getDate()),
-            'date_commande'        => $this->formatDate($transaction->getBaseTransaction()->getDate()),
+            'date'                 => $this->formatDate($transaction->getCreatedAt()),
+            'date_commande'        => $this->formatDate($transaction->getBaseTransaction()->getCreatedAt()),
             'montant'              => $this->formatAmount($transaction->getBaseTransaction()->getAmount(), $transaction->getCurrency()),
             'montant_a_capturer'   => $this->formatAmount($transaction->getAmount(), $transaction->getCurrency()),
             'montant_deja_capture' => $this->formatAmount($captureAmountCumul, $transaction->getCurrency()), // TODO
@@ -365,7 +370,7 @@ class CmcicPaymentSystem implements CreditCardInterface
     {
         $data = sprintf('%s*%s*%s*%s*%s*%s*%s*%s*%s**********',
             $this->tpe,
-            $this->formatDate($transaction->getDate()),
+            $this->formatDate($transaction->getCreatedAt()),
             $this->formatAmount($transaction->getAmount(), $transaction->getCurrency()),
             $transaction->getOrderId(),
             '',
@@ -389,7 +394,7 @@ class CmcicPaymentSystem implements CreditCardInterface
     {
         $data = sprintf('%s*%s*%s%s%s*%s*%s*%s*%s*%s*',
             $this->getTpe(),
-            $this->formatDate($transaction->getDate()),
+            $this->formatDate($transaction->getCreatedAt()),
             $this->formatAmount($transaction->getAmount(), $transaction->getCurrency()),
             $this->formatAmount($captureAmountCumul, $transaction->getCurrency()),
             $this->formatAmount($remainingAmount, $transaction->getCurrency()),
