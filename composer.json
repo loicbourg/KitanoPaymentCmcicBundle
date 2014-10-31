@@ -17,9 +17,6 @@
             "homepage": "http://www.anonymation.com"
         }
     ],
-    "require": {
-        "kitano/payment-bundle": "master-dev"
-    },
     "autoload": {
         "psr-0": { "Kitano\\PaymentCmcicBundle": "" }
     },
