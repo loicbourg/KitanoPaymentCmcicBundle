@@ -97,7 +97,7 @@ class CmcicPaymentSystem implements CreditCardInterface
     {
         // TODO: Implement handlePaymentNotification() method.
         $requestData = $request->request;
-        $transaction = $this->transactionRepository->findAuthorizationByOrderId($requestData->get('reference', null));
+        $transaction = $this->transactionRepository->findByOrderId($requestData->get('reference', null));
         if (null === $transaction) {
             // TODO: erreur
             if (null !== $this->logger) {
