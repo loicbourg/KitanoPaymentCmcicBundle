@@ -9,6 +9,7 @@ use Kitano\PaymentBundle\Entity\CaptureTransaction;
 use Kitano\PaymentBundle\KitanoPaymentEvents;
 use Kitano\PaymentBundle\Event\PaymentNotificationEvent;
 use Kitano\PaymentBundle\Event\PaymentCaptureEvent;
+use Kitano\PaymentBundle\PaymentSystem\HandlePaymentResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
