@@ -169,10 +169,7 @@ class CmcicPaymentSystem implements CreditCardInterface
         $transaction->setExtraData(array('response' => $requestData->all(), 'acknowledgment' => $acknowledgment));
         $this->transactionRepository->save($transaction);
 
-        $event = new PaymentNotificationEvent($transaction);
-        $this->dispatcher->dispatch(KitanoPaymentEvents::PAYMENT_NOTIFICATION, $event);
-
-        return new Response($acknowledgment);
+        return new HandlePaymentResponse($transaction, new Response($acknowledgment));
     }
 
     public function handleBackToShop(Request $request)
